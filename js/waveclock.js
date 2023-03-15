@@ -1,9 +1,6 @@
-var _angnoise = 0;
-var _radiusnoise = 0;
-var _xnoise = 0;
-var _ynoise = 0;
+var _angnoise, _radiusnoise;
+var _xnoise, _ynoise, _radius;
 var _angle = -Math.PI / 2;
-var _radius = 0;
 var _strokeCol = 254;
 var _strokeChange = -1;
 
