@@ -1,5 +1,5 @@
 let _numChildren = 7;
-let _maxLevels = 7;
+let _maxLevels = 5;
 
 let _trunk;
 
@@ -68,7 +68,7 @@ class Branch {
     this.endx = this.x + (this.len * cos(radian));
     this.endy = this.y + (this.len * sin(radian));
 
-    
+
     if (this.children) {
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].updateMe(this.endx, this.endy);
