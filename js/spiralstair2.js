@@ -1,55 +1,58 @@
 let cameraZ = 0;
-let stairOffset = 0;
 let stairList = [];
+let timeSinceLastStair = 0;
+let stairInterval = 100;
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   smooth();
 
-  for (let i = 0; i < 100; i++) {
-    stairList.push(i);
+  for (let i = 0; i < 400; i++) {
+    stairList.push(TWO_PI * (i / 100));
   }
-  stairOffset = 100;
 }
 
-let maxStairs = 300;
+let maxStairs = 800;
 
 function draw() {
-  background(30);
+  background(10, 10, 10);
+  ambientLight(60, 60, 100);
+  directionalLight(255, 255, 255, 0, -1, -1);
   rotateX(-PI / 4);
   rotateY(PI / 4);
   translate(0, -200, 0);
 
   const stairHeight = 4;
   const stairRadius = 200;
-  const stairThickness = 20;
-  const stairWidth = 30;
 
-  let newStairs = 1 * deltaTime / 1000;
+  timeSinceLastStair += deltaTime;
 
-  for (let i = 0; i < newStairs; i++) {
+  if (timeSinceLastStair >= stairInterval) {
     if (stairList.length < maxStairs) {
-      stairList.unshift(stairOffset);
-      stairOffset++;
+      stairList.unshift(stairList[0] - TWO_PI / 100);
     } else {
-      stairList.unshift(stairList.pop());
-      stairOffset++;
+      let lastStairAngle = stairList.pop();
+      stairList.unshift(lastStairAngle - TWO_PI / 100);
     }
+    timeSinceLastStair = 0;
   }
 
   for (let i = 0; i < stairList.length; i++) {
-    let angle = map(stairList[i], 0, stairOffset, 0, TWO_PI * 4);
+    let angle = stairList[i];
     let x = cos(angle) * stairRadius;
     let y = i * stairHeight;
     let z = sin(angle) * stairRadius;
+    let colorNoise = random(-10, 10);
+    let boxNoise = random(-1, 1);
     push();
     translate(x, y, z);
-    rotateY(angle + PI / 2);
-    fill(255);
-    box(stairWidth, stairThickness, stairWidth);
+    rotateY(-angle);
+    fill(10 + colorNoise, 120 + colorNoise, 180 + colorNoise, 120 + colorNoise);
+    noStroke();
+    box(30 + boxNoise, 10 + boxNoise, 10 + boxNoise);
     pop();
   }
 
-  cameraZ += stairHeight * (1 * deltaTime / 1000);
-  camera(0, -400, cameraZ + 800, 0, 0, cameraZ, 0, 1, 0);
+  cameraZ += stairHeight * (2 * deltaTime / 1000);
+  camera(0, 50, cameraZ + 500, 0, 0, cameraZ, 0, 1, 0);
 }
